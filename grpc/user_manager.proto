@@ -1,0 +1,51 @@
+syntax="proto2";
+
+option go_package = "google.golang.org/grpc/examples/route_guide/routeguide";
+
+package grpc;
+
+service UserManager {
+
+    rpc Login(LoginRequest) returns (LoginResponse) {}
+
+    rpc Update(UpdateRequest) returns (UpdateResponse) {}
+
+}
+
+message User {
+    required uint64 user_id = 1;
+    required string username = 2;
+    required string password = 3;
+    optional string nickname = 4;
+    optional string profile_picture = 5;
+}
+
+message LoginRequest {
+    required string username = 1;
+    required string password = 2;
+}
+
+message LoginResponse {
+    enum ResponseCode {
+        Success = 1;
+        Failed = 2;
+    }
+
+    required ResponseCode rc = 1;
+    required User user = 2;
+}
+
+message UpdateRequest {
+    optional string nickname = 1;
+    optional string profile_picture = 2;
+}
+
+message UpdateResponse {
+    enum ResponseCode {
+        Success = 1;
+        Failure = 2;
+    }
+
+    required ResponseCode rc = 1;
+}
+
