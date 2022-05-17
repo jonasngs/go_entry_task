@@ -1,6 +1,6 @@
-syntax="proto2";
+syntax="proto3";
 
-option go_package = "google.golang.org/grpc/examples/route_guide/routeguide";
+option go_package = "github.com/jonasngs/go_entry_task/grpc";
 
 package grpc;
 
@@ -10,42 +10,46 @@ service UserManager {
 
     rpc Update(UpdateRequest) returns (UpdateResponse) {}
 
+    rpc LoadProfile(ProfileRequest) returns (ProfileResponse) {}
 }
 
 message User {
-    required uint64 user_id = 1;
-    required string username = 2;
-    required string password = 3;
-    optional string nickname = 4;
-    optional string profile_picture = 5;
+    uint64 user_id = 1;
+    string username = 2;
+    string password = 3;
+    string nickname = 4;
+    string profile_picture = 5;  
+}
+
+message Image {
+    string data = 1;
+    string file_extension = 2;
 }
 
 message LoginRequest {
-    required string username = 1;
-    required string password = 2;
+    string username = 1;
+    string password = 2;
+    string session_token = 3;
+}
+
+message ProfileRequest {
+    string session_token = 1;
+}
+
+message ProfileResponse {
+    User user = 1;
 }
 
 message LoginResponse {
-    enum ResponseCode {
-        Success = 1;
-        Failed = 2;
-    }
-
-    required ResponseCode rc = 1;
-    required User user = 2;
+    string session_token = 1;
 }
 
 message UpdateRequest {
-    optional string nickname = 1;
-    optional string profile_picture = 2;
+    string nickname = 1;
+    Image profile_picture = 2;
+    string session_token = 3;
 }
 
 message UpdateResponse {
-    enum ResponseCode {
-        Success = 1;
-        Failure = 2;
-    }
-
-    required ResponseCode rc = 1;
 }
 

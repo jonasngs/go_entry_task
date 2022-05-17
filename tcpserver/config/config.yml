@@ -1,0 +1,15 @@
+tcp_server: localhost:4040
+
+redis:
+  address: localhost:6379
+  password:
+  db: 0
+
+database:
+  driver: mysql
+  db_name: go_entry_task_db
+  username: root
+  password: garena
+  hosname: localhost:3306
+  max_connections: 151
+  max_idle_connections: 100

@@ -4,7 +4,7 @@
 // - protoc             v3.19.4
 // source: grpc/user_manager.proto
 
-package routeguide
+package grpc
 
 import (
 	context "context"
@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserManagerClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UpdateResponse, error)
+	LoadProfile(ctx context.Context, in *ProfileRequest, opts ...grpc.CallOption) (*ProfileResponse, error)
 }
 
 type userManagerClient struct {
@@ -52,12 +53,22 @@ func (c *userManagerClient) Update(ctx context.Context, in *UpdateRequest, opts 
 	return out, nil
 }
 
+func (c *userManagerClient) LoadProfile(ctx context.Context, in *ProfileRequest, opts ...grpc.CallOption) (*ProfileResponse, error) {
+	out := new(ProfileResponse)
+	err := c.cc.Invoke(ctx, "/grpc.UserManager/LoadProfile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserManagerServer is the server API for UserManager service.
 // All implementations must embed UnimplementedUserManagerServer
 // for forward compatibility
 type UserManagerServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Update(context.Context, *UpdateRequest) (*UpdateResponse, error)
+	LoadProfile(context.Context, *ProfileRequest) (*ProfileResponse, error)
 	mustEmbedUnimplementedUserManagerServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedUserManagerServer) Login(context.Context, *LoginRequest) (*Lo
 }
 func (UnimplementedUserManagerServer) Update(context.Context, *UpdateRequest) (*UpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedUserManagerServer) LoadProfile(context.Context, *ProfileRequest) (*ProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoadProfile not implemented")
 }
 func (UnimplementedUserManagerServer) mustEmbedUnimplementedUserManagerServer() {}
 
@@ -120,6 +134,24 @@ func _UserManager_Update_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserManager_LoadProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserManagerServer).LoadProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc.UserManager/LoadProfile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserManagerServer).LoadProfile(ctx, req.(*ProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserManager_ServiceDesc is the grpc.ServiceDesc for UserManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var UserManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Update",
 			Handler:    _UserManager_Update_Handler,
+		},
+		{
+			MethodName: "LoadProfile",
+			Handler:    _UserManager_LoadProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

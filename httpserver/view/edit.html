@@ -1,3 +1,11 @@
 <html>
-    
+    <form action="/edit" enctype="multipart/form-data" method="POST">
+        <label for="nickname" style="font-size: 20px;"> Nickname: </label><br>
+        <input type="text" name="nickname" value={{.Nickname}}><br>
+        <br>
+        <label for="profile_picture" style="font-size: 20px;"> Profile Picture: </label><br>
+        <input type="file" name="image_profile" style="font-size: 16px;" accept="image/png, image/jpg, image/jpeg, image/bmp">
+        <br><br>
+        <input style="font-size: 24px;" type="submit" value="Submit">
+    </form>
 </html>
